@@ -18,6 +18,7 @@ public abstract class Screen extends Frame implements WindowListener {
         gbc = new GridBagConstraints();
         setLayout(gbl);
         setTitle(title);
+        addWindowListener(this);
     }
 
     public TextArea getOutputArea() {

@@ -30,7 +30,7 @@ public class NewsApp {
             case "listener":
                 try {
                     int port = Integer.parseInt(args[1]);
-                    screen = new ListenerScreen("Читать расслку", port);
+                    screen = new ListenerScreen("Читать рассылку", port);
                     break;
                 } catch (Exception e) {
                     e.printStackTrace();

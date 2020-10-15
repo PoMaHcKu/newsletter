@@ -30,7 +30,6 @@ public class WriterScreen extends Screen implements ActionListener {
         inputText = new TextField(30);
         send = new Button(SEND_LABEL);
         send.addActionListener(this);
-        addWindowListener(this);
         createArchiveLabel(gbl, gbc, new Label(ARCHIVE));
         addArchiveArea(gbl, gbc, outputArea);
         createNewNewsLabel(gbl, gbc, new Label(NEW_LABEL));
@@ -78,7 +77,7 @@ public class WriterScreen extends Screen implements ActionListener {
         gbc.gridwidth = GridBagConstraints.REMAINDER;
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
-        ta.setFont(new Font("Arial", Font.PLAIN, 12));
+        ta.setFont(new Font("Arial", Font.PLAIN, 14));
         ta.setEditable(false);
         gbl.setConstraints(ta, gbc);
         add(ta);
@@ -112,7 +111,7 @@ public class WriterScreen extends Screen implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(send)) {
             String message = inputText.getText();
-            if (validationMessage(message)) sendString(message);
+            if (validationMessage(message)) sendString(message + "\n");
         }
     }
 
