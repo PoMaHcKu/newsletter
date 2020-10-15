@@ -1,7 +1,6 @@
 package com.news.server;
 
 import com.news.view.Screen;
-import com.news.view.WriterScreen;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -14,8 +13,10 @@ public class ServerThread extends Thread {
 
     private Screen chatWindow;
     private DatagramSocket socket;
+    private int port;
 
-    public ServerThread(Screen screen) {
+    public ServerThread(Screen screen, int port) {
+        this.port = port;
         this.chatWindow = screen;
     }
 
@@ -35,7 +36,7 @@ public class ServerThread extends Thread {
     @Override
     public void run() {
         try {
-            socket = new DatagramSocket(8800);
+            socket = new DatagramSocket(port);
             while (true) {
                 SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
                 String message = "\n" + format.format(new Date()) + " -> " + receiveMessage(socket);

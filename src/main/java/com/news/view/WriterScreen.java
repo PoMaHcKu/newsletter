@@ -4,15 +4,15 @@ import com.news.server.ServerThread;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 
-public class WriterScreen extends Screen implements WindowListener {
+public class WriterScreen extends Screen implements ActionListener {
 
     private final String ARCHIVE = "Архив новостей";
     private final String NEW_LABEL = "Новая новость";
@@ -22,9 +22,9 @@ public class WriterScreen extends Screen implements WindowListener {
     private DatagramSocket socket;
     private ServerThread serverThread;
 
-    public WriterScreen(String title) throws HeadlessException {
-        super(title);
-        serverThread = new ServerThread(this);
+    public WriterScreen(String title, int port) throws HeadlessException {
+        super(title, port);
+        serverThread = new ServerThread(this, port);
         serverThread.start();
         outputArea = new TextArea(10, 30);
         inputText = new TextField(30);
@@ -37,6 +37,10 @@ public class WriterScreen extends Screen implements WindowListener {
         addTextField(gbl, gbc, inputText);
         addSendButton(gbl, gbc, send);
         setVisible(true);
+    }
+
+    @Override
+    public void start() {
         try {
             socket = new DatagramSocket();
             send.setEnabled(true);
@@ -125,8 +129,7 @@ public class WriterScreen extends Screen implements WindowListener {
     private void sendString(String message) {
         byte[] buff = message.getBytes();
         try {
-            DatagramPacket packet = new DatagramPacket(buff, buff.length,
-                    InetAddress.getByName("255.255.255.255"), 8800);
+            DatagramPacket packet = new DatagramPacket(buff, buff.length, InetAddress.getByName("255.255.255.255"), port);
             socket.send(packet);
             inputText.setText("");
         } catch (IOException e) {
@@ -136,32 +139,7 @@ public class WriterScreen extends Screen implements WindowListener {
 
     @Override
     public void windowClosing(WindowEvent e) {
-        setVisible(false);
         socket.close();
-        System.exit(0);
-    }
-
-    @Override
-    public void windowOpened(WindowEvent e) {
-    }
-
-    @Override
-    public void windowClosed(WindowEvent e) {
-    }
-
-    @Override
-    public void windowIconified(WindowEvent e) {
-    }
-
-    @Override
-    public void windowDeiconified(WindowEvent e) {
-    }
-
-    @Override
-    public void windowActivated(WindowEvent e) {
-    }
-
-    @Override
-    public void windowDeactivated(WindowEvent e) {
+        super.windowClosing(e);
     }
 }
