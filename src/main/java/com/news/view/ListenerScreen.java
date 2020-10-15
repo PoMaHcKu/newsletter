@@ -1,18 +1,13 @@
 package com.news.view;
 
-import com.news.server.ServerThread;
-
 import java.awt.*;
 
 public class ListenerScreen extends Screen {
 
     private final String NEWS_LABEL = "Новости";
-    private ServerThread thread;
 
     public ListenerScreen(String title, int port) {
         super(title, port);
-        thread = new ServerThread(this, port);
-        thread.start();
         outputArea = new TextArea(10, 30);
         createArchiveLabel(gbl, gbc, new Label(NEWS_LABEL));
         addNewsArea(gbl, gbc, outputArea);
@@ -21,7 +16,7 @@ public class ListenerScreen extends Screen {
 
     @Override
     public void start() {
-
+        System.out.println();
     }
 
     private void createArchiveLabel(GridBagLayout gbl, GridBagConstraints gbc, Label label) {

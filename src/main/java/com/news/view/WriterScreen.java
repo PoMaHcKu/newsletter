@@ -1,7 +1,5 @@
 package com.news.view;
 
-import com.news.server.ServerThread;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,12 +18,9 @@ public class WriterScreen extends Screen implements ActionListener {
     private Button send;
     private TextField inputText;
     private DatagramSocket socket;
-    private ServerThread serverThread;
 
     public WriterScreen(String title, int port) throws HeadlessException {
         super(title, port);
-        serverThread = new ServerThread(this, port);
-        serverThread.start();
         outputArea = new TextArea(10, 30);
         inputText = new TextField(30);
         send = new Button(SEND_LABEL);
