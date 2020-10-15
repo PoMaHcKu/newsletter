@@ -12,8 +12,6 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class ScreenWindow extends Frame implements ActionListener, WindowListener {
 
@@ -28,6 +26,8 @@ public class ScreenWindow extends Frame implements ActionListener, WindowListene
     private ServerThread serverThread;
 
     public ScreenWindow() throws HeadlessException {
+        serverThread = new ServerThread(this);
+        serverThread.start();
         setSize(500, 400);
         archiveForm = new TextArea(10, 30);
         inputText = new TextField(30);
@@ -44,10 +44,9 @@ public class ScreenWindow extends Frame implements ActionListener, WindowListene
         addTextField(gbl, gbc, inputText);
         addSendButton(gbl, gbc, send);
         setVisible(true);
-        serverThread = new ServerThread(this);
-        serverThread.start();
         try {
             socket = new DatagramSocket();
+            send.setEnabled(true);
         } catch (SocketException e) {
             e.printStackTrace();
         }
@@ -115,10 +114,19 @@ public class ScreenWindow extends Frame implements ActionListener, WindowListene
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(send)) {
             String message = inputText.getText();
-            SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
-            archiveForm.append("\n" + format.format(new Date()) + " -> " + message);
-            sendString(message);
+            if (validationMessage(message)) sendString(message);
         }
+    }
+
+    private boolean validationMessage(String message) {
+        if (message.length() == 0) {
+            return false;
+        } else if (message.length() > 500) {
+            archiveForm.append("\n\nThe message is too long (max length is 500 characters).");
+            return false;
+        }
+        inputText.setText("");
+        return true;
     }
 
     private void sendString(String message) {
@@ -127,6 +135,7 @@ public class ScreenWindow extends Frame implements ActionListener, WindowListene
             DatagramPacket packet = new DatagramPacket(buff, buff.length,
                     InetAddress.getByName("255.255.255.255"), 8800);
             socket.send(packet);
+            inputText.setText("");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -141,36 +150,26 @@ public class ScreenWindow extends Frame implements ActionListener, WindowListene
 
     @Override
     public void windowOpened(WindowEvent e) {
-
     }
 
     @Override
     public void windowClosed(WindowEvent e) {
-
     }
 
     @Override
     public void windowIconified(WindowEvent e) {
-
     }
 
     @Override
     public void windowDeiconified(WindowEvent e) {
-
     }
 
     @Override
     public void windowActivated(WindowEvent e) {
-
     }
 
     @Override
     public void windowDeactivated(WindowEvent e) {
-
-    }
-
-    public Button getSend() {
-        return send;
     }
 
     public TextArea getArchiveForm() {

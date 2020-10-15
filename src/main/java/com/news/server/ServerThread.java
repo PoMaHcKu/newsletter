@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class ServerThread extends Thread {
 
@@ -17,10 +19,10 @@ public class ServerThread extends Thread {
     }
 
     private String receiveMessage(DatagramSocket socket) {
-        byte[] buf = new byte[512];
+        byte[] buf = new byte[1024];
         DatagramPacket packet;
         try {
-            packet = new DatagramPacket(buf, 512);
+            packet = new DatagramPacket(buf, 1024);
             socket.receive(packet);
             return new String(buf);
         } catch (IOException e) {
@@ -31,17 +33,18 @@ public class ServerThread extends Thread {
 
     @Override
     public void run() {
-        chatWindow.getSend().setEnabled(true);
         try {
             socket = new DatagramSocket(8800);
             while (true) {
-                chatWindow.getArchiveForm().append("\n-->" + receiveMessage(socket));
+                SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+                String message = "\n" + format.format(new Date()) + " -> " + receiveMessage(socket);
+                chatWindow.getArchiveForm().append(message);
             }
         } catch (SocketException e) {
             System.out.println("Server socket couldn't be opened");
             socket.close();
-            this.interrupt();
             e.printStackTrace();
+            System.exit(-1);
         }
     }
 }
