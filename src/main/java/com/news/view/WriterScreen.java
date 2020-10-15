@@ -4,7 +4,6 @@ import com.news.server.ServerThread;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.IOException;
@@ -13,33 +12,27 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 
-public class ScreenWindow extends Frame implements ActionListener, WindowListener {
+public class WriterScreen extends Screen implements WindowListener {
 
-    private final String NEWSLETTER = "Отправка новостей";
     private final String ARCHIVE = "Архив новостей";
     private final String NEW_LABEL = "Новая новость";
     private final String SEND_LABEL = "Опубликовать";
     private Button send;
-    private TextArea archiveForm;
     private TextField inputText;
     private DatagramSocket socket;
     private ServerThread serverThread;
 
-    public ScreenWindow() throws HeadlessException {
+    public WriterScreen(String title) throws HeadlessException {
+        super(title);
         serverThread = new ServerThread(this);
         serverThread.start();
-        setSize(500, 400);
-        archiveForm = new TextArea(10, 30);
+        outputArea = new TextArea(10, 30);
         inputText = new TextField(30);
         send = new Button(SEND_LABEL);
         send.addActionListener(this);
         addWindowListener(this);
-        GridBagLayout gbl = new GridBagLayout();
-        GridBagConstraints gbc = new GridBagConstraints();
-        setLayout(gbl);
-        setTitle(NEWSLETTER);
         createArchiveLabel(gbl, gbc, new Label(ARCHIVE));
-        addArchiveArea(gbl, gbc, archiveForm);
+        addArchiveArea(gbl, gbc, outputArea);
         createNewNewsLabel(gbl, gbc, new Label(NEW_LABEL));
         addTextField(gbl, gbc, inputText);
         addSendButton(gbl, gbc, send);
@@ -122,7 +115,7 @@ public class ScreenWindow extends Frame implements ActionListener, WindowListene
         if (message.length() == 0) {
             return false;
         } else if (message.length() > 500) {
-            archiveForm.append("\n\nThe message is too long (max length is 500 characters).");
+            outputArea.append("\n\nThe message is too long (max length is 500 characters).");
             return false;
         }
         inputText.setText("");
@@ -170,9 +163,5 @@ public class ScreenWindow extends Frame implements ActionListener, WindowListene
 
     @Override
     public void windowDeactivated(WindowEvent e) {
-    }
-
-    public TextArea getArchiveForm() {
-        return archiveForm;
     }
 }

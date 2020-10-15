@@ -1,6 +1,7 @@
 package com.news.server;
 
-import com.news.view.ScreenWindow;
+import com.news.view.Screen;
+import com.news.view.WriterScreen;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -11,11 +12,11 @@ import java.util.Date;
 
 public class ServerThread extends Thread {
 
-    private ScreenWindow chatWindow;
+    private Screen chatWindow;
     private DatagramSocket socket;
 
-    public ServerThread(ScreenWindow screenWindow) {
-        this.chatWindow = screenWindow;
+    public ServerThread(Screen screen) {
+        this.chatWindow = screen;
     }
 
     private String receiveMessage(DatagramSocket socket) {
@@ -38,7 +39,7 @@ public class ServerThread extends Thread {
             while (true) {
                 SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
                 String message = "\n" + format.format(new Date()) + " -> " + receiveMessage(socket);
-                chatWindow.getArchiveForm().append(message);
+                chatWindow.getOutputArea().append(message);
             }
         } catch (SocketException e) {
             System.out.println("Server socket couldn't be opened");
