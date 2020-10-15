@@ -78,6 +78,7 @@ public class WriterScreen extends Screen implements ActionListener {
         gbc.gridwidth = GridBagConstraints.REMAINDER;
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
+        ta.setFont(new Font("Arial", Font.PLAIN, 12));
         ta.setEditable(false);
         gbl.setConstraints(ta, gbc);
         add(ta);
@@ -119,7 +120,7 @@ public class WriterScreen extends Screen implements ActionListener {
         if (message.length() == 0) {
             return false;
         } else if (message.length() > 500) {
-            outputArea.append("\n\nThe message is too long (max length is 500 characters).");
+            outputArea.append("\nThe message is too long (max length is 500 characters).\n");
             return false;
         }
         inputText.setText("");
