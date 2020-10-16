@@ -1,14 +1,13 @@
 package com.news.view;
 
+import com.news.socket.MessagesTransmitter;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
-import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.SocketException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class WriterScreen extends Screen implements ActionListener {
 
@@ -17,10 +16,11 @@ public class WriterScreen extends Screen implements ActionListener {
     private final String SEND_LABEL = "Опубликовать";
     private Button send;
     private TextField inputText;
-    private DatagramSocket socket;
+    private MessagesTransmitter transmitter;
 
     public WriterScreen(String title, int port) throws HeadlessException {
-        super(title, port);
+        super(title);
+        transmitter = new MessagesTransmitter(port);
         outputArea = new TextArea(10, 30);
         inputText = new TextField(30);
         send = new Button(SEND_LABEL);
@@ -33,14 +33,8 @@ public class WriterScreen extends Screen implements ActionListener {
         setVisible(true);
     }
 
-    @Override
     public void start() {
-        try {
-            socket = new DatagramSocket();
-            send.setEnabled(true);
-        } catch (SocketException e) {
-            e.printStackTrace();
-        }
+        send.setEnabled(true);
     }
 
     private void createArchiveLabel(GridBagLayout gbl, GridBagConstraints gbc, Label label) {
@@ -104,37 +98,22 @@ public class WriterScreen extends Screen implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
         if (e.getSource().equals(send)) {
             String message = inputText.getText();
-            if (validationMessage(message)) sendString(message + "\n");
-        }
-    }
-
-    private boolean validationMessage(String message) {
-        if (message.length() == 0) {
-            return false;
-        } else if (message.length() > 500) {
-            outputArea.append("\nThe message is too long (max length is 500 characters).\n");
-            return false;
-        }
-        inputText.setText("");
-        return true;
-    }
-
-    private void sendString(String message) {
-        byte[] buff = message.getBytes();
-        try {
-            DatagramPacket packet = new DatagramPacket(buff, buff.length, InetAddress.getByName("255.255.255.255"), port);
-            socket.send(packet);
-            inputText.setText("");
-        } catch (IOException e) {
-            e.printStackTrace();
+            if (transmitter.validationMessage(message)) {
+                transmitter.sendMessage(message + "\n");
+                outputArea.append(dateFormat.format(new Date()) + " -> " + message + "\n");
+                inputText.setText("");
+            } else {
+                outputArea.append("\nMessage isn't correct. Message mustn't be empty and message length must be less than 500.\n");
+            }
         }
     }
 
     @Override
     public void windowClosing(WindowEvent e) {
-        socket.close();
+        transmitter.close();
         super.windowClosing(e);
     }
 }

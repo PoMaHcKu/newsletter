@@ -1,4 +1,4 @@
-package com.news.server;
+package com.news.socket;
 
 import com.news.view.Screen;
 
@@ -9,13 +9,13 @@ import java.net.SocketException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class ServerThread extends Thread {
+public class MessagesReceiver extends Thread {
 
     private Screen chatWindow;
     private DatagramSocket socket;
     private int port;
 
-    public ServerThread(Screen screen, int port) {
+    public MessagesReceiver(Screen screen, int port) {
         this.port = port;
         this.chatWindow = screen;
     }

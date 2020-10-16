@@ -1,23 +1,16 @@
 package com.news.view;
 
-import com.news.server.ServerThread;
-
 import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 public abstract class Screen extends Frame implements WindowListener {
 
-    protected final int port;
     protected GridBagLayout gbl;
     protected GridBagConstraints gbc;
     protected TextArea outputArea;
-    protected ServerThread serverThread;
 
-    public Screen(String title, int port) {
-        this.port = port;
-        serverThread = new ServerThread(this, port);
-        serverThread.start();
+    public Screen(String title) {
         setSize(500, 400);
         gbl = new GridBagLayout();
         gbc = new GridBagConstraints();

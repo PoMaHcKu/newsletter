@@ -1,13 +1,18 @@
 package com.news.view;
 
+import com.news.socket.MessagesReceiver;
+
 import java.awt.*;
 
 public class ListenerScreen extends Screen {
 
     private final String NEWS_LABEL = "Новости";
+    private final MessagesReceiver messagesReceiver;
+
 
     public ListenerScreen(String title, int port) {
-        super(title, port);
+        super(title);
+        messagesReceiver = new MessagesReceiver(this, port);
         outputArea = new TextArea(10, 30);
         createArchiveLabel(gbl, gbc, new Label(NEWS_LABEL));
         addNewsArea(gbl, gbc, outputArea);
@@ -16,7 +21,7 @@ public class ListenerScreen extends Screen {
 
     @Override
     public void start() {
-        System.out.println();
+        messagesReceiver.start();
     }
 
     private void createArchiveLabel(GridBagLayout gbl, GridBagConstraints gbc, Label label) {
