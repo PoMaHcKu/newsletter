@@ -102,7 +102,7 @@ public class WriterScreen extends Screen implements ActionListener {
         if (e.getSource().equals(send)) {
             String message = inputText.getText();
             if (transmitter.validationMessage(message)) {
-                transmitter.sendMessage(message + "\n");
+                transmitter.sendMessage(message);
                 outputArea.append(dateFormat.format(new Date()) + " -> " + message + "\n");
                 inputText.setText("");
             } else {

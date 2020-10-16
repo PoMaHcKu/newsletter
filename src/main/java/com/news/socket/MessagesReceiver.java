@@ -39,7 +39,7 @@ public class MessagesReceiver extends Thread {
             socket = new DatagramSocket(port);
             while (true) {
                 SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
-                String message = "" + format.format(new Date()) + " • " + receiveMessage(socket);
+                String message = format.format(new Date()) + " -> " + receiveMessage(socket) + "\n";
                 chatWindow.getOutputArea().append(message);
             }
         } catch (SocketException e) {
