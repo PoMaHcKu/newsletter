@@ -39,8 +39,8 @@ public class MessagesReceiver extends Thread {
             socket = new DatagramSocket(port);
             while (true) {
                 SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
-                String message = format.format(new Date()) + " -> " + receiveMessage(socket) + "\n";
-                chatWindow.getOutputArea().append(message);
+                String message = format.format(new Date()) + " -> " + receiveMessage(socket);
+                chatWindow.getOutputArea().append(message + "\n");
             }
         } catch (SocketException e) {
             System.out.println("Server socket couldn't be opened");
