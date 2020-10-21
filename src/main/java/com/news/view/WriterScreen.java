@@ -21,6 +21,16 @@ public class WriterScreen extends Screen implements ActionListener {
     public WriterScreen(String title, int port) throws HeadlessException {
         super(title);
         transmitter = new MessagesTransmitter(port);
+        init();
+    }
+
+    public WriterScreen(String title, int port, String address) {
+        super(title);
+        transmitter = new MessagesTransmitter(port, address);
+        init();
+    }
+
+    private void init() {
         outputArea = new TextArea(10, 30);
         inputText = new TextField(30);
         send = new Button(SEND_LABEL);

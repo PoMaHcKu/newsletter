@@ -10,9 +10,20 @@ public class MessagesTransmitter {
 
     private DatagramSocket socket;
     private final int port;
+    private String address;
 
     public MessagesTransmitter(int port) {
         this.port = port;
+        initSocket();
+    }
+
+    public MessagesTransmitter(int port, String address) {
+        this.port = port;
+        this.address = address;
+        initSocket();
+    }
+
+    private void initSocket() {
         try {
             socket = new DatagramSocket();
         } catch (SocketException e) {
