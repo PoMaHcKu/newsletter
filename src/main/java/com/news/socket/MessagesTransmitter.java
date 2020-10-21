@@ -26,6 +26,7 @@ public class MessagesTransmitter {
     private void initSocket() {
         try {
             socket = new DatagramSocket();
+            socket.setBroadcast(true);
         } catch (SocketException e) {
             e.printStackTrace();
         }
@@ -37,8 +38,9 @@ public class MessagesTransmitter {
 
     public void sendMessage(String message) {
         byte[] buff = message.getBytes();
+        String address = this.address == null ? "255.255.255.255" : this.address;
         try {
-            DatagramPacket packet = new DatagramPacket(buff, buff.length, InetAddress.getByName("255.255.255.255"), port);
+            DatagramPacket packet = new DatagramPacket(buff, buff.length, InetAddress.getByName(address), port);
             socket.send(packet);
         } catch (IOException e) {
             e.printStackTrace();
