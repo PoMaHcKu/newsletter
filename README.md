@@ -21,4 +21,8 @@ or
 ```bash
 java -jar target/Nesletter.jar listener 5000
 ```
+Also, you can set broadcast address manual. Otherwise, messages will be sent to the address 255.255.255.255
+```bash
+java -jar target/Newsletter.jar writer 5000 192.168.100.255
+```
 You will see the result, when system runs in different roles with the same ports on different machines on the same local network.
